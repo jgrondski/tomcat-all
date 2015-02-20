@@ -17,8 +17,10 @@ group node['tomcat-all']['group']
 
 # Create user
 user node['tomcat-all']['user'] do
+  supports :manage_home => true
   group node['tomcat-all']['group']
   system true
+  home '/home/tomcat'
   shell '/bin/bash'
 end
 
@@ -29,30 +31,12 @@ ark 'tomcat' do
   prefix_root node['tomcat-all']['install_directory']
   prefix_home node['tomcat-all']['install_directory']
   owner node['tomcat-all']['user']
-  notifies :create, 'template[/etc/logrotate.d/tomcat]', :immediately
-end
-
-# Log rotation (catalina.out)
-template '/etc/logrotate.d/tomcat' do
-  source 'logrotate.conf.erb'
-  notifies :create, "template[#{node['tomcat-all']['install_directory']}/tomcat/conf/server.xml]", :immediately
-end
-
-# Tomcat server configuration
-template node['tomcat-all']['install_directory'] + "/tomcat/conf/server.xml" do
-  source 'server.conf.erb'
-  notifies :create, "template[#{node['tomcat-all']['install_directory']}/tomcat/bin/catalina.sh]", :immediately
-end
-
-# Tomcat catalina configuration
-template node['tomcat-all']['install_directory'] + "/tomcat/bin/catalina.sh" do
-  source 'catalina.conf.erb'
-  notifies :create, "template[/etc/init.d/tomcat]", :immediately
+  notifies :create, 'template[/etc/systemd/system/tomcat.service]', :immediately
 end
 
 # Tomcat init script configuration
-template '/etc/init.d/tomcat' do
-  source 'init.conf.erb'
+template '/etc/systemd/system/tomcat.service' do
+  source 'tomcat.service.erb'
   mode '0755'
   action :nothing
 end

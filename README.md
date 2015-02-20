@@ -1,11 +1,8 @@
 # tomcat-all cookbook
 
-This cookbook will install tomcat using apache's binaries and extract it to the desired path.
+This cookbook will install tomcat using apache's binaries and extract it to the desired path. Stripped down and comatible with the following:
 
-Tested with test-kitchen + serverspec:
-
-- CentOS 6.4 + Tomcat 7.0.53
-- Ubuntu 12.04 + Tomcat 7.0.53
+- CentOS 7 + Tomcat 8
 
 # Requirements
 
@@ -18,10 +15,9 @@ Developed using
 
 Simply include the tomcat-all recipe wherever you would like, such as a run
 list (recipe[tomcat-all]) or a cookbook (include_recipe 'tomcat-all').
-By default, Oracle JDK 1.7 (JDK & JAVA_HOME) and Tomcat 7 will be installed.
+Requires "java" recipe.
 
-This recipe will also create a custom server.xml, catalina.sh and init script
-configured with the bellow default settings if no other settings is provided.
+This recipe will also create an init script configured with the bellow default settings if no other settings are provided.
 
 # Attributes
 
